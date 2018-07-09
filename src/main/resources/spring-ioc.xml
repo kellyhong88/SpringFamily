@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-init-method="init" default-destroy-method="destroy">
+       
+       <bean id="oneInterface" class="com.kelly.ioc.OneInterfaceImpl"></bean>
+       
+       <!-- setter injection -->
+       <bean id="injectionService" class="com.kelly.ioc.InjectionServiceImpl">
+         <property name="injectionDAO" ref="injectionDAO"/>
+       </bean>
+       
+       <!-- constructor injection -->
+<!--        <bean id="injectionService" class="com.kelly.ioc.InjectionServiceImpl"> -->
+<!--          <constructor-arg name="injectionDAO" ref="injectionDAO"/> -->
+<!--        </bean> -->
+       
+       <bean id="injectionDAO" class="com.kelly.ioc.InjectionDAOImpl"></bean>
+
+</beans>

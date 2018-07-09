@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+    <session-factory>
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/kellyDB</property>
+
+        <property name="connection.username">kelly</property>
+        <property name="connection.password">1119</property>
+
+        <!-- 配置hibernate数据库方言，hibernate可针对特殊的数据库进行优化 -->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+        <!-- 是否把hibernate运行时的sql语句输出到控制台 -->
+        <property name="show_sql">true</property>
+        <!-- 是否把输出到控制台的sql语句进行排版 -->
+        <property name="format_sql">true</property>
+        <!-- create：drop原有的表，生成新的表；update：在原有的表结构上进行更新 -->
+        <property name="hbm2ddl.auto">update</property>
+
+        <!-- 如果使用sessionFactory的getCurrentSession方法，需要配置current_session_context_class -->
+        <!-- 如果是本地事务（jdbc事务）  JDBC: Java DataBase Connectivity -->
+        <property name="hibernate.current_session_context_class">thread</property>
+        <!-- 如果是全局事务（jta事务）   JPA: Java Transaction API -->
+         <!--<property name="hibernate.current_session_context_class">jta</property> -->
+
+        <mapping class="com.kelly.hibernate.StudentEntity"/>
+        <mapping resource="StudentEntity.hbm.xml"/>
+    </session-factory>
+
+</hibernate-configuration>

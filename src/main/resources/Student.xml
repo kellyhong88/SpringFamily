@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Student">
+
+    <resultMap type="com.kelly.mybatis.Student" id="studentMap">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="gender" jdbcType="CHAR" property="gender"/>
+        <result column="birthday" jdbcType="DATE" property="birthday"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+    </resultMap>
+
+    <select id="queryById" parameterType="integer" resultMap="studentMap">
+        SELECT *
+        FROM student
+        WHERE id = #{id:INTEGER}
+    </select>
+
+    <select id="queryByName" parameterType="string" resultMap="studentMap">
+        SELECT *
+        FROM student
+        WHERE name = #{name:VARCHAR}
+    </select>
+
+    <select id="queryByIdAndName" parameterType="com.kelly.mybatis.Student" resultMap="studentMap">
+        SELECT *
+        FROM student
+        WHERE id = #{id:INTEGER} AND name = #{name:VARCHAR}
+    </select>
+
+    <insert id="insert" parameterType="com.kelly.mybatis.Student" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO student
+        (id,
+         name,
+         gender,
+         birthday,
+         address
+        )
+        VALUES
+            (#{id:INTEGER},
+             #{name:VARCHAR},
+             #{gender:CHAR},
+             #{birthday:DATE},
+             #{address:VARCHAR}
+            )
+    </insert>
+
+    <update id="update" parameterType="com.kelly.mybatis.Student">
+        UPDATE student
+        SET
+            name     = #{name:VARCHAR},
+            gender   = #{gender:CHAR},
+            birthday = #{birthday:DATE},
+            address  = #{address:VARCHAR}
+        WHERE
+            id = #{id:INTEGER}
+    </update>
+
+    <delete id="delete" parameterType="integer">
+        DELETE FROM student
+        WHERE id = #{id:INTEGER}
+    </delete>
+
+    <!--<select id="version" parameterType="long" resultType="int">-->
+    <!--SELECT version FROM user WHERE id = #{id,jdbcType=INTEGER}-->
+    <!--</select>-->
+
+    <!--<delete id="delete" parameterType="UserAlias">-->
+    <!--DELETE FROM user WHERE id = #{id:INTEGER}-->
+    <!--</delete>-->
+
+    <!--<insert id="insert" parameterType="UserAlias" useGeneratedKeys="false">-->
+    <!--INSERT INTO user-->
+    <!--( id,-->
+    <!--username,-->
+    <!--password,-->
+    <!--administrator-->
+    <!--)-->
+    <!--VALUES-->
+    <!--( #{id},-->
+    <!--#{username,jdbcType=VARCHAR},-->
+    <!--#{password.encrypted:VARCHAR},-->
+    <!--#{administrator,jdbcType=BOOLEAN}-->
+    <!--)-->
+    <!--</insert>-->
+
+    <!--<update id="update" parameterType="UserAlias">-->
+    <!--UPDATE user SET-->
+    <!--username = #{username,jdbcType=VARCHAR},-->
+    <!--password = #{password.encrypted,jdbcType=VARCHAR},-->
+    <!--administrator = #{administrator,jdbcType=BOOLEAN}-->
+    <!--WHERE-->
+    <!--id = #{id,jdbcType=INTEGER}-->
+    <!--</update>-->
+
+    <!--&lt;!&ndash;   Unique constraint check &ndash;&gt;-->
+    <!--<select id="isUniqueUsername" parameterType="map" resultType="boolean">-->
+    <!--SELECT (count(*) = 0)-->
+    <!--FROM user-->
+    <!--WHERE ((#{userId,jdbcType=BIGINT} IS NOT NULL AND id != #{userId,jdbcType=BIGINT}) OR #{userId,jdbcType=BIGINT} IS-->
+    <!--NULL)  &lt;!&ndash; other than me &ndash;&gt;-->
+    <!--AND (username = #{username,jdbcType=VARCHAR})-->
+    <!--</select>-->
+
+</mapper>

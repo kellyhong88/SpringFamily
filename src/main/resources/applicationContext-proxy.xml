@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+    <!--引入外部属性文件-->
+    <context:property-placeholder location="jdbc.properties"/>
+
+    <!--配置c3p0连接池-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driverClass}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--配置业务层类-->
+    <bean id="accountService" class="com.kelly.transaction.AccountServiceTarget">
+        <property name="accountDao" ref="accountDao"/>
+    </bean>
+
+    <bean id="accountDao" class="com.kelly.transaction.AccountDaoImpl">
+        <!--注入连接池-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--配置事务管理器
+        DAO层的不同实现(即对数据库不同的访问框架)使用不同的事务管理器
+        如JDBC、MyBatis 用 DataSourceTransactionManager，
+        Hibernate 用 HibernateTransactionManager-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--注入连接池-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--基于TransactionProxyFactoryBean的xml配置-->
+    <!--配置业务层代理-->
+    <bean id="accountServiceProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <!--配置目标对象-->
+        <property name="target" ref="accountService"/>
+        <!--注入事务管理器-->
+        <property name="transactionManager" ref="transactionManager"/>
+        <!--注入事务属性-->
+        <property name="transactionAttributes">
+            <props>
+                <!--PROPAGATION: 事务的传播机制/传播行为
+                    ISOLATION:   事务的隔离机制/隔离级别
+                    readOnly:    只读(不可以insert或update或delete,只能query)
+                    -Exception:  需要回滚事务的异常
+                    +Exception:  不需回滚事务的异常-->
+                <prop key="transfer">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>

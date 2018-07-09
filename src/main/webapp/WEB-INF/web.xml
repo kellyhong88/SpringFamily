@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+                             http://java.sun.com/xml/ns/j2ee/web-app_3_0.xsd">
+
+    <display-name>Kelly Web Application</display-name>
+
+    <!--Spring应用上下文，理解层次化的ApplicationContext
+        层次化：DispatcherServlet(awaiting incoming HttpServletRequests)
+           <-> WebApplicationContext(*dispatcher-servlet.xml, directly related to DispatcherServlet,
+                                  contains configuration of HandlerMapping, Controllers, ViewResolver)
+           <-> ApplicationContext(e.g. spring*.xml, dubbo*.xml, ...
+                                  which contain configuration of services, datasource)
+           ContextLoaderListener is listening these common shared ApplicationContexts
+                       which shouldn't be limited to some dispatcher-servlet-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/config/applicationContext*.xml</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:log4j.properties</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>mvc-dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/config/mvc-dispatcher-servlet.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        <!--<multipart-config>-->
+            <!--<max-file-size>52428800</max-file-size>-->
+            <!--<max-request-size>52428800</max-request-size>-->
+            <!--<file-size-threshold>0</file-size-threshold>-->
+        <!--</multipart-config>-->
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>mvc-dispatcher</servlet-name>
+        <!--拦截所有请求-->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <!--配置过滤器-->
+    <filter>
+        <filter-name>encoding-filter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding-filter</param-name>
+            <param-value>utf8</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>encoding-filter</filter-name>
+        <url-pattern>/</url-pattern>
+    </filter-mapping>
+
+</web-app>

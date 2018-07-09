@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+       
+       <bean id="concurrentOpsExec" class="com.kelly.advisor.ConcurrentOpsExec">
+         <property name="maxRetries" value="3"></property>
+         <property name="order" value="100"></property>
+       </bean>
+
+       <aop:config>
+         <aop:aspect id="concurrentOpsRetries" ref="concurrentOpsExec">
+           <aop:pointcut expression="execution(* com.kelly.advisor.InvokeService.*(..))" id="potentialOps"/>
+           <aop:around method="doConcurrentOps" pointcut-ref="potentialOps"/>         
+         </aop:aspect>
+       </aop:config>
+
+       <bean id="invokeService" class="com.kelly.advisor.InvokeService"></bean>
+
+</beans>

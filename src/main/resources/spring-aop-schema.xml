@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+    <bean id="aspect" class="com.kelly.aop.Aspect"></bean>
+    <bean id="aspectBiz" class="com.kelly.aop.AspectBiz"></bean>
+
+    <aop:config>
+        <aop:aspect id="aspectAOP" ref="aspect">
+            <aop:pointcut id="pointcut" expression="execution(* com.kelly.aop.AspectBiz.*(..))"/>
+            <aop:before pointcut-ref="pointcut" method="before"/>
+            <aop:after-returning pointcut-ref="pointcut" method="afterReturning"/>
+            <aop:after-throwing pointcut-ref="pointcut" method="afterThrowing"/>
+            <aop:after pointcut-ref="pointcut" method="after"/>
+            <aop:around pointcut-ref="pointcut" method="around"/>
+
+            <aop:pointcut id="pointcutInit"
+                          expression="execution(* com.kelly.aop.AspectBiz.init(String,int)) and args(name,times)"/>
+            <aop:around pointcut-ref="pointcutInit" method="aroundInit"/>
+
+            <aop:declare-parents types-matching="com.kelly.aop.AspectBiz(+)"
+                                 implement-interface="com.kelly.aop.Fit"
+                                 default-impl="com.kelly.aop.FitImpl"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>
