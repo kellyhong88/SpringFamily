@@ -6,9 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @EnableAutoConfiguration
 @SpringBootApplication
-public class SpringsApplication {
+public class SpringFamilyApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringsApplication.class, args);
+		SpringApplication.run(SpringFamilyApplication.class, args);
 	}
 }
